@@ -7,8 +7,8 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        Console.WriteLine("Type something:");
-        string someString = Console.ReadLine();
+        //Console.WriteLine("Type something:");
+        //string someString = Console.ReadLine();
 
         //Q0-WordsCounter
         //int numberOfWords = WordsCounter(listOfWords);
@@ -32,7 +32,37 @@ internal class Program
         //ReturnEvensUsingLinq(numbers);
 
         //Working with LINQ
-        LinqExercise();
+        //LinqExercise();
+
+        //Jumping on the Clouds 29/02/2024
+        List<int> clouds = new List<int>();
+        //0 0 1 0 0 1 0
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(1);
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(1);
+        //clouds.Add(0);
+
+        //0 0 0 0 1 0
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(1);
+        //clouds.Add(0);
+
+        //0 0 0 1 0 0 
+        clouds.Add(0);
+        clouds.Add(0);
+        clouds.Add(0);
+        clouds.Add(1);
+        clouds.Add(0);
+        clouds.Add(0);
+
+        HackerRank hackerRank = new HackerRank();
+        int jumps = hackerRank.jumpingOnClouds(clouds);
+        Console.WriteLine($"Number of jumps is {jumps}");
     }
 
     public static void LinqExercise()
