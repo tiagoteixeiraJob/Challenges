@@ -35,7 +35,7 @@ internal class Program
         //LinqExercise();
 
         //Jumping on the Clouds 29/02/2024
-        List<int> clouds = new List<int>();
+        //List<int> clouds = new List<int>();
         //0 0 1 0 0 1 0
         //clouds.Add(0);
         //clouds.Add(0);
@@ -167,5 +167,62 @@ internal class Program
         }
 
         return threeFirstNumbers;
+    }
+
+    //RomanToDecimal
+    private static int RomanToDecimal(string roman)
+    {
+        int result = 0;
+
+        if (roman != null)
+        {
+            for (int i = 0; i < roman.Length; i++)
+            {
+                int num1 = ConvertToDecimal(roman[i]);
+
+                if (i + 1 < roman.Length)
+                {
+                    int num2 = ConvertToDecimal(roman[i + 1]);
+
+                    if (num1 >= num2)
+                    {
+                        result = result + num1;
+                    }
+                    else
+                    {
+                        result = result + (num2 - num1);
+                        i++;
+                    }
+                }
+                else
+                {
+                    result = result + num1;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    private static int ConvertToDecimal(char letter)
+    {
+        switch (letter)
+        {
+            case 'I':
+                return 1;
+            case 'V':
+                return 5;
+            case 'X':
+                return 10;
+            case 'L':
+                return 50;
+            case 'C':
+                return 100;
+            case 'D':
+                return 500;
+            case 'M':
+                return 1000;
+        }
+        return -1;
     }
 }
