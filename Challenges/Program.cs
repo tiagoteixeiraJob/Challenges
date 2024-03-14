@@ -1,19 +1,17 @@
 ﻿using Challenges;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.WebSockets;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
+        #region tests
         //Console.WriteLine("Type something:");
-        //string someString = Console.ReadLine();
+        //string listOfWords = Console.ReadLine();
 
-        //Q0-WordsCounter
+        //Q0 - WordsCounter
         //int numberOfWords = WordsCounter(listOfWords);
         //Console.WriteLine($"Number of words is {numberOfWords}");
-        //Console.ReadKey(); 
+        //Console.ReadKey();
 
         //https://www.fullstack.cafe/interview-questions/c
 
@@ -53,18 +51,20 @@ internal class Program
         //clouds.Add(0);
 
         //0 0 0 1 0 0 
-        clouds.Add(0);
-        clouds.Add(0);
-        clouds.Add(0);
-        clouds.Add(1);
-        clouds.Add(0);
-        clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(0);
+        //clouds.Add(1);
+        //clouds.Add(0);
+        //clouds.Add(0);
 
-        HackerRank hackerRank = new HackerRank();
-        int jumps = hackerRank.jumpingOnClouds(clouds);
-        Console.WriteLine($"Number of jumps is {jumps}");
+        //HackerRank hackerRank = new HackerRank();
+        //int jumps = hackerRank.jumpingOnClouds(clouds);
+        //Console.WriteLine($"Number of jumps is {jumps}");
+        #endregion
     }
 
+    #region methods
     public static void LinqExercise()
     {
         List<User> users = new List<User>();
@@ -86,14 +86,14 @@ internal class Program
 
         var womanUsers = users.Where(x => x.Gender == "F");
 
-        foreach (var user in womanUsers) 
-        { 
-            var name = user.Name; 
+        foreach (var user in womanUsers)
+        {
+            var name = user.Name;
         }
 
         var userJoici = womanUsers.Where(z => z.Name == "Joici");
 
-        if(userJoici != null)
+        if (userJoici != null)
         {
             Console.WriteLine("Usuária Joici encontrada");
         }
@@ -141,9 +141,9 @@ internal class Program
     {
         int adder = 0;
 
-        foreach (int number in numbers) 
+        foreach (int number in numbers)
         {
-            if(number %2 == 0)
+            if (number % 2 == 0)
             {
                 adder = number + adder;
             }
@@ -225,4 +225,5 @@ internal class Program
         }
         return -1;
     }
+    #endregion
 }
