@@ -1,4 +1,6 @@
 ﻿using Challenges;
+using Newtonsoft.Json.Linq;
+using System.Net;
 
 internal class Program
 {
@@ -62,6 +64,15 @@ internal class Program
         //int jumps = hackerRank.jumpingOnClouds(clouds);
         //Console.WriteLine($"Number of jumps is {jumps}");
         #endregion
+
+        Console.WriteLine("Task2 (filter restaurants per 'city' & 'maxCost' params)");
+        Console.WriteLine("--------------------------------------------------------");
+
+        HashSet<string> listOfRestaurants = GetRelevantFoodOutlets("Houston", 30);
+        foreach (var restaurant in listOfRestaurants)
+        {
+            Console.WriteLine(restaurant);
+        }
     }
 
     #region methods
@@ -226,4 +237,49 @@ internal class Program
         return -1;
     }
     #endregion
+
+    public static HashSet<string> GetRelevantFoodOutlets(string city, int maxCost)
+    {
+        HashSet<string> listOfRestaurants = new HashSet<string>();
+        int pageNumber = 1;
+
+        while (pageNumber < 5)
+        {
+            string url = $"https://jsonmock.hackerrank.com/api/food_outlets?city={city}&page={pageNumber}";
+
+            string responseFromServer;
+            try
+            {
+                WebRequest request = WebRequest.Create(url);
+
+                request.Method = "GET";
+
+                using (WebResponse response = request.GetResponse())
+                {
+                    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+                    {
+                        responseFromServer = reader.ReadToEnd();
+                    }
+                }
+
+                var data = JObject.Parse(responseFromServer);
+                var restaurants = data["data"].ToObject<Restaurant[]>();
+
+                var restaurantsFiltered = restaurants.Where(r => r.City == city && r.Estimated_cost <= maxCost).ToList();
+
+                foreach (var restaurant in restaurantsFiltered)
+                {
+                    listOfRestaurants.Add(restaurant.Name);
+                }
+
+                pageNumber++;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Exception [{ex.Message}] in EmployeeService > GetRelevantFoodOutlets().", ex);
+            }
+        }
+
+        return listOfRestaurants;
+    }
 }
