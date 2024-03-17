@@ -1,4 +1,4 @@
-﻿namespace Challenges
+﻿namespace Challenges.Model
 {
     public class Restaurant
     {

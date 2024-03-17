@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Challenges
+namespace Challenges.Model
 {
     public class User
     {
@@ -15,8 +15,8 @@ namespace Challenges
 
         public User(string name, int age, string Job, string gender)
         {
-            this.Name = name;
-            this.Age = age;
+            Name = name;
+            Age = age;
             this.Job = Job;
             Gender = gender;
 

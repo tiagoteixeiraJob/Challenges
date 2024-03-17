@@ -1,4 +1,5 @@
-﻿using Challenges;
+﻿using Challenges.Model;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Net;
 
@@ -63,16 +64,29 @@ internal class Program
         //HackerRank hackerRank = new HackerRank();
         //int jumps = hackerRank.jumpingOnClouds(clouds);
         //Console.WriteLine($"Number of jumps is {jumps}");
+
+        //Mollie HackerRank (Task2)
+        //Console.WriteLine("Task2 (filter restaurants per 'city' & 'maxCost' params)");
+        //Console.WriteLine("--------------------------------------------------------");
+
+        //HashSet<string> listOfRestaurants = GetRelevantFoodOutlets("Houston", 30);
+        //foreach (var restaurant in listOfRestaurants)
+        //{
+        //    Console.WriteLine(restaurant);
+        //}
         #endregion
 
-        Console.WriteLine("Task2 (filter restaurants per 'city' & 'maxCost' params)");
-        Console.WriteLine("--------------------------------------------------------");
+        //IMPORT Csv
+        List<DataInfo> dataInfo = ImportCsvData();
 
-        HashSet<string> listOfRestaurants = GetRelevantFoodOutlets("Houston", 30);
-        foreach (var restaurant in listOfRestaurants)
-        {
-            Console.WriteLine(restaurant);
-        }
+        //SERIALIZE Json
+        string jsonString = ConvertToJson(dataInfo);
+
+        //EXPORT Csv
+        //ExportCsvData();
+
+        //DESERIALIZE Json
+        //List<DataInfo> dataInfo = DeserializeJson();
     }
 
     #region methods
@@ -236,7 +250,6 @@ internal class Program
         }
         return -1;
     }
-    #endregion
 
     public static HashSet<string> GetRelevantFoodOutlets(string city, int maxCost)
     {
@@ -281,5 +294,75 @@ internal class Program
         }
 
         return listOfRestaurants;
+    }
+    #endregion
+
+    //IMPORT Csv
+    public static List<DataInfo> ImportCsvData()
+    {
+        List<DataInfo> list = new List<DataInfo>();
+
+        using (var reader = new StreamReader(@"C:\Files\dataImport.csv"))
+        {
+            while (!reader.EndOfStream)
+            {
+                var line = reader.ReadLine();
+                var values = line.Split(";");
+
+                var dataInfo = new DataInfo();
+
+                dataInfo.OriginalSourceId = values[0];
+                dataInfo.TransactionDate = Convert.ToDateTime(values[1]);
+                dataInfo.Value = Convert.ToDecimal(values[2]);
+                dataInfo.Rate = Convert.ToDecimal(values[3]);
+
+                list.Add(dataInfo);
+            }
+        }
+
+        return list;
+    }
+
+    //EXPORT Csv
+    public static void ExportCsvData()
+    {
+        string fileName = @"C:\Files\dataExport-" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".csv";
+
+        DataInfo data = new DataInfo();
+
+        data.OriginalSourceId = "Line11";
+        data.TransactionDate = DateTime.Now;
+        data.Value = 11000;
+        data.Rate = 11000;
+
+        using (StreamWriter writer = new StreamWriter(fileName))
+        {
+            writer.WriteLine(data.OriginalSourceId + ";" + data.TransactionDate + ";" + data.Value + ";" + data.Rate);
+        }
+    }
+
+    //SERIALIZE Json
+    public static string ConvertToJson(List<DataInfo> dataInfos)
+    {
+        string jsonString = JsonConvert.SerializeObject(dataInfos);
+        Console.WriteLine(jsonString);
+
+        return jsonString;
+    }
+
+    //DESERIALIZE Json
+    public static List<DataInfo> DeserializeJson()
+    {
+        string fileName = @"C:\Files\dataImport.json";
+
+        string jsonString;
+        using (StreamReader reader = new StreamReader(fileName))
+        {
+            jsonString = reader.ReadToEnd();
+        };
+
+        var dataInfos = JsonConvert.DeserializeObject<List<DataInfo>>(jsonString);
+
+        return dataInfos;
     }
 }
