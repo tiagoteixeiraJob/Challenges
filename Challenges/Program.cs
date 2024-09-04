@@ -1,20 +1,117 @@
 ﻿using Challenges.Model;
+using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Collections.Generic;
+using System.Data.SqlTypes;
+using System.IO;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 internal class Program
 {
     private static void Main(string[] args)
     {
-        #region tests
-        //Console.WriteLine("Type something:");
-        //string listOfWords = Console.ReadLine();
+        string continuing = "S";
 
-        //Q0 - WordsCounter
-        //int numberOfWords = WordsCounter(listOfWords);
-        //Console.WriteLine($"Number of words is {numberOfWords}");
-        //Console.ReadKey();
+        while (continuing.ToUpper() != "N")
+        {
+            //Console.Write("Type DAY: ");
+            //int day = Convert.ToInt32(Console.ReadLine());
+            //Console.Write("Type MONTH: ");
+            //int month = Convert.ToInt32(Console.ReadLine());
+            //Console.Write("Type YEAR: ");
+            //int year = Convert.ToInt32(Console.ReadLine());
+
+            //Console.WriteLine($"Date is {day}/{month}/{year}");
+
+            //var dayOfWeek = DayOfWeek(day, month, year);
+            //Console.WriteLine($"Day of week is '{dayOfWeek}'");
+
+            /////////////////////////////////////////////////////
+            //var encoded = Base64Encode(word);
+            //Console.WriteLine($"Word encoded is [{encoded}]");
+
+            //var decoded = Base64Decode(word);
+            //Console.WriteLine($"Word decoded is [{decoded}]");
+
+            /////////////////////////////////////////////////////
+            //Console.Write("Type a word: ");
+            //string word = Console.ReadLine();
+
+            //string mostRepeated = MostRepeatedCharacter(word);
+            //Console.Write($"The letter most repeated is [{mostRepeated}]");
+
+            //Console.Write("Type a word: ");
+            //int rotations = Convert.ToInt32(Console.ReadLine());
+            //string word = Console.ReadLine();
+
+            ////////char repeated = MostRepeatedChar(word);
+            ////////Console.WriteLine($"Most repeated char is [{repeated}]");
+            ///
+            //int countWords = wordsCounterd(word);
+            //Console.WriteLine($"Number of words is {countWords}");
+
+            ////////////string fibonacciArray = FibonacciNovo(rotations);
+            ////////////Console.WriteLine($"Array de fibonacci is: {fibonacciArray}");
+
+            //////////////int[] array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+            //////////////int sum = SumOfEvensNew(array);
+            //////////////Console.WriteLine($"Sum of evens is {sum}");
+
+            //////int[] array1 = { 1, 2, 4, 100, 182, 5, 6, 7 };
+            //////int[] array2 = { 3, 4, 5, 6, 7 };
+
+            //////FindNumbers(array1, array2);
+
+            int[] array1 = { 2, 2, 3, 3, 3 };
+            //int[] array1 = { 2, 2, 3, 3 };
+            //int[] array1 = { 3, 3, 3, 2, 2 };
+            int lucky = LuckyNumber(array1);
+            Console.WriteLine($"LuckyNumber is {lucky}");
+
+            Console.WriteLine();
+            Console.WriteLine("--------------------------------");
+            Console.WriteLine("Se deseja sair digite 'N'");
+            continuing = Console.ReadLine();
+
+            Console.Clear();
+        }
+
+        #region tests
+        //while (continuing.ToUpper() == "S")
+        //{
+        //    Console.WriteLine("Type something:");
+        //    string listOfWords = Console.ReadLine();
+
+        //    //Q0 - WordsCounter
+        //    int numberOfWords = WordsCounter(listOfWords);
+        //    Console.WriteLine($"Number of words is {numberOfWords}");
+        //    Console.WriteLine("--------------------------------");
+        //    Console.WriteLine("Se deseja testar mais palavras, digite 'S'");
+        //    continuing = Console.ReadLine();
+
+        //    Console.Clear();
+        //}
+
+        //while (continuing.ToUpper() != "N")
+        //{
+        //    Console.Write("Fibonacci - type number of rotations:");
+        //    int rotation = Convert.ToInt32(Console.ReadLine());
+        //    //Fibonacci(rotation);
+        //    string sequence = FibonacciNew(rotation);
+        //    Console.WriteLine(sequence);
+
+        //    Console.WriteLine();
+        //    Console.WriteLine("--------------------------------");
+        //    Console.WriteLine("Se deseja sair digite 'N'");
+        //    continuing = Console.ReadLine();
+
+        //    Console.Clear();
+        //}
 
         //https://www.fullstack.cafe/interview-questions/c
 
@@ -74,22 +171,202 @@ internal class Program
         //{
         //    Console.WriteLine(restaurant);
         //}
-        #endregion
 
         //IMPORT Csv
-        List<DataInfo> dataInfo = ImportCsvData();
+        //List<DataInfo> dataInfo = ImportCsvData();
 
         //SERIALIZE Json
-        string jsonString = ConvertToJson(dataInfo);
+        //string jsonString = ConvertToJson(dataInfo);
 
         //EXPORT Csv
         //ExportCsvData();
 
         //DESERIALIZE Json
         //List<DataInfo> dataInfo = DeserializeJson();
+
+        #endregion
+    }
+
+    public static void FindNumbers(int[] array1, int[] array2)
+    {
+        HashSet<int> newArray = new HashSet<int>(array2);
+
+        foreach (int num in array1)
+        {
+            if (!newArray.Contains(num))
+            {
+                Console.WriteLine(num);
+            }
+        }
+    }
+
+    public static char MostRepeatedChar(string word)
+    {
+        Dictionary<char, int> newArray = new Dictionary<char, int>();
+        int occurrences = 0;
+        char mostRepeated = new char();
+
+        foreach (char letter in word)
+        {
+            if (newArray.ContainsKey(letter))
+            {
+                newArray[letter]++;
+            }
+            else
+            {
+                newArray[letter] = 1;
+            }
+        }
+
+        foreach (char letter in word)
+        {
+            int counter = newArray[letter];
+
+            if (counter > occurrences)
+            {
+                occurrences = counter;
+                mostRepeated = letter;
+            }
+        }
+
+        return mostRepeated;
+    }
+
+    public static string DayOfWeek(int day, int month, int year)
+    {
+        DateTime dt = new DateTime(year, month, day);
+
+        return dt.DayOfWeek.ToString();
+    }
+
+    public static void wordsCounterd(string word)
+    {
+        int[] array = new int[] { 1, 2, 3, 4, 5 };
+        string[] words = new string[] { "TEste", "validation" };
+        Dictionary<char, int> dicto = new Dictionary<char, int>() { { 'A', 1 }, { 'B', 2 } };
+        StringBuilder sb = new StringBuilder();
+        Stack<int> stack = new Stack<int>();
+        Queue<int> queue = new Queue<int>();
     }
 
     #region methods
+    public static string MostRepeatedCharacter(string word)
+    {
+        Dictionary<char, int> countLetters = new Dictionary<char, int>();
+        int occurrences = 0;
+        char mostRepeatedChar = new char();
+
+        foreach (char letter in word)
+        {
+            //validar expressão regular
+
+            if (countLetters.ContainsKey(letter))
+            {
+                countLetters[letter]++;
+            }
+            else
+            {
+                countLetters[letter] = 1;
+            }
+        }
+
+        foreach (char letter in word)
+        {
+            int counter = countLetters[letter];
+
+            if (counter > occurrences)
+            {
+                occurrences = counter;
+                mostRepeatedChar = letter;
+            }
+        }
+
+        return mostRepeatedChar.ToString();
+    }
+
+    public static string Base64Encode(string word)
+    {
+        var newWord = System.Text.Encoding.UTF8.GetBytes(word);
+        return System.Convert.ToBase64String(newWord);
+    }
+
+    public static string Base64Decode(string base64EncodedData)
+    {
+        var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+        return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+    }
+
+    public static string GetDayOfWeek(int day, int month, int year)
+    {
+        DateTime date = new DateTime(year, month, day);
+
+        return date.DayOfWeek.ToString();
+    }
+
+    public static int[] Fibonacci(int rotations)
+    {
+        int[] numbers = new int[rotations];
+
+        int a = 0;
+        int b = 1;
+        int c = 0;
+
+        for (int i = 0; i < rotations; i++)
+        {
+            c = a + b;
+
+            numbers[i] = c;
+
+            a = b;
+            b = c;
+        }
+
+        return numbers;
+    }
+
+    public static string FibonacciString(int rotations)
+    {
+        string comment = "Sequence[";
+
+        int a = 0; int b = 1; int c = 0;
+
+        for (int i = 0; i < rotations; i++)
+        {
+            c = a + b;
+
+            comment = comment + c + ",";
+
+            a = b; b = c;
+        }
+
+        comment = comment + "]";
+
+        return comment.Replace(",]", "]");
+    }
+
+    public static string FibonacciStringBuilder(int rotations)
+    {
+        int[] newArray = new int[rotations];
+        StringBuilder sb = new StringBuilder();
+
+        int a = 0; int b = 1; int c = 0;
+        sb.Append("[");
+
+        for (int i = 0; i < rotations; i++)
+        {
+            c = a + b;
+
+            newArray[i] = c;
+            sb.Append($"{c},");
+
+            a = b;
+            b = c;
+        }
+        sb.Append("]");
+
+        return sb.ToString().Replace(",]", "]");
+    }
+
     public static void LinqExercise()
     {
         List<User> users = new List<User>();
@@ -297,7 +574,8 @@ internal class Program
     }
     #endregion
 
-    //IMPORT Csv
+    #region challenges
+    //IMPORT Csv - Inscale 25/03/2024
     public static List<DataInfo> ImportCsvData()
     {
         List<DataInfo> list = new List<DataInfo>();
@@ -323,7 +601,7 @@ internal class Program
         return list;
     }
 
-    //EXPORT Csv
+    //EXPORT Csv - Inscale 25/03/2024
     public static void ExportCsvData()
     {
         string fileName = @"C:\Files\dataExport-" + DateTime.Now.ToString("ddMMyyyy-HHmmss") + ".csv";
@@ -362,7 +640,228 @@ internal class Program
         };
 
         var dataInfos = JsonConvert.DeserializeObject<List<DataInfo>>(jsonString);
-
         return dataInfos;
     }
+
+    //Ardanis - 03/2024
+    //Have the function DifferentCases(str) take the str parameter being passed and return it in upper camel case format where the first letter of each word is capitalized.
+    //The string will only contain letters and some combination of delimiter punctuation characters separating each word.
+    //For example: if str is "Daniel LikeS-coding" then your program should return the string 'DanielLikesCoding'.
+    //For example: if str is "hAve A#goOd--cHAllengE*" then your program should return the string 'HaveAGoodChallenge'.
+    private static string DifferentCases(string str)
+    {
+        // Usaremos StringBuilder para construir a string final
+        StringBuilder result = new StringBuilder();
+        bool capitalizeNext = true;
+
+        foreach (char c in str)
+        {
+            if (char.IsLetter(c))
+            {
+                if (capitalizeNext)
+                {
+                    result.Append(char.ToUpper(c));
+                    capitalizeNext = false;  // Depois de capitalizar, volta ao estado normal
+                }
+                else
+                {
+                    result.Append(char.ToLower(c));
+                }
+            }
+            else
+            {
+                // Encontramos um delimitador, então a próxima letra deve ser capitalizada
+                capitalizeNext = true;
+            }
+        }
+
+        return result.ToString();
+    }
+
+    //Ardanis - 08/2024
+    //Have the function NonrepeatingCharacter(str) take the str parameter being passed, which will contain only alphabetic characters and spaces, and return the first
+    //non-repeating character. For example: if str is "agettkgaeee" then your program should return "k". The string will always contain at least one character and there will always be at least one on-repeating character.
+    //For example "abcdef" - Output is "a"
+    //For example "hello world hi hey" - Output is "w"
+    private static string NonrepeatingCharacter(string str)
+    {
+        // Dicionário para armazenar a contagem de cada caractere
+        Dictionary<char, int> countLetters = new Dictionary<char, int>();
+
+        // Contar as ocorrências de cada caractere na string
+        foreach (char c in str)
+        {
+            if (countLetters.ContainsKey(c))
+            {
+                countLetters[c]++;
+            }
+            else
+            {
+                countLetters[c] = 1;
+            }
+        }
+
+        // Encontrar o primeiro caractere com contagem 1
+        foreach (char r in str)
+        {
+            if (countLetters[r] == 1)
+            {
+                return r.ToString();
+            }
+        }
+
+        // Retorna um caractere padrão se nenhum caractere não repetido for encontrado (não ocorrerá conforme o enunciado)
+        return "";
+    }
+
+    //Ardanis - 08/2024
+    //Have the function MinWindowSubstring(strArr) take the array of strings stored in strArr, which will contain only two strings,
+    //the first parameter being the string N and the second parameter being a string K of some characters, and your goal is to determine the smallest substring of N that contains all the characters in K.
+    //For example: if strArr is ["aaabaaddae", "aed"] then the smallest substring of N that contains the characters a, e, and d is "dae" located at the end of the string.
+    //So for this example your program should return the string "dae".
+
+    //Another example: if strArr is ["aabdccdbcacd", "aad"] then the smallest substring of N that contains all of the characters in K is "aabd" which is located at the beginning of the string.
+    //Both parameters will be strings ranging in length from 1 to 50 characters and all of K's characters will exist somewhere in the string N. Both strings will only contain lowercase alphabetic characters.
+
+    //For example "new string[] {"ahffaksfajeeubsne", "jefaa"}" - Output is "aksfaje"
+    //For example "new string[] {"aaffhkksemckelloe", "fhea"}"  - Output is "affhkkse"
+
+    private static string MinWindowSubstring(string[] strArr)
+    {
+        string nArray = strArr[0];
+        string kArray = strArr[1];
+
+        Dictionary<char, int> validatedChars = new Dictionary<char, int>();
+
+        foreach (char c in kArray)
+        {
+            if (validatedChars.ContainsKey(c))
+            {
+                validatedChars[c]++;
+            }
+            else
+            {
+                validatedChars[c] = 1;
+            }
+        }
+
+        int leftChar = 0;
+        int rightChar = 0;
+        Dictionary<char, int> charCounts = new Dictionary<char, int>();
+        int required = kArray.Length;
+        int minimumSize = int.MaxValue;
+        int minimumLeft = int.MaxValue;
+
+        while (rightChar < nArray.Length)
+        {
+            char c = nArray[rightChar];
+
+            if (validatedChars.ContainsKey(c))
+            {
+                if (charCounts.ContainsKey(c))
+                {
+                    charCounts[c]++;
+                }
+                else
+                {
+                    charCounts[c] = 1;
+                }
+
+                if (charCounts[c] <= validatedChars[c])
+                {
+                    required--;
+                }
+            }
+
+            while (required == 0)
+            {
+                if (rightChar - leftChar + 1 < minimumSize)
+                {
+                    minimumSize = rightChar - leftChar + 1;
+                    minimumLeft = leftChar;
+                }
+
+                char beginChar = nArray[leftChar];
+
+                if (validatedChars.ContainsKey(beginChar))
+                {
+                    charCounts[beginChar]--;
+
+                    if (charCounts[beginChar] < validatedChars[beginChar])
+                        required++;
+                }
+                leftChar++;
+            }
+
+            rightChar++;
+        }
+
+        return minimumSize == int.MaxValue ? "" : nArray.Substring(minimumLeft, minimumSize);
+    }
+
+    //Kaizen - 29/08/2024
+    public static int LuckyNumber(int[] number)
+    {
+        Dictionary<int, int> array = new Dictionary<int, int>();
+        int lucky = -1;
+
+        foreach (int num in number)
+        {
+            if (array.ContainsKey(num))
+            {
+                array[num]++;
+            }
+            else
+            {
+                array[num] = 1;
+            }
+        }
+
+        foreach (int num in number)
+        {
+            int counter = array[num];
+
+            if (counter == num && num > lucky)
+            {
+                lucky = num;
+            }
+        }
+
+        return lucky;
+    }
+
+    //Forte Group - 30/08/2024
+    public static void FindNonRepeatedNumbers(int[] array1, int[] array2)
+    {
+        HashSet<int> newArray = new HashSet<int>(array2);
+
+        foreach (int num in array1)
+        {
+            if (!newArray.Contains(num))
+            {
+                Console.WriteLine(num);
+            }
+        }
+    }
+
+    //XM - 04/09/2024
+    public static async Task PrintNumbersAsync()
+    {
+        //private static async Task Main(string[] args)
+        //{
+        //    Console.Write("1");
+        //    var task = PrintNumbersAsync();
+        //    Console.Write("2");
+        //    await task;
+        //}
+
+        Console.Write("3");
+        await Task.Delay(10);
+        Console.Write("4");
+        await Task.Delay(10);
+        Console.Write("5");
+        await Task.Delay(10);
+    }
+
+    #endregion
 }
