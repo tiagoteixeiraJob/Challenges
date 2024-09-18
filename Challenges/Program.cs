@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
 using System.IO;
@@ -862,6 +863,58 @@ internal class Program
         Console.Write("5");
         await Task.Delay(10);
     }
+
+    //Maersk - 18/09/2024 (validar o problema que está travando o processamento e como resolve-lo)
+
+    // You are developing a multi-threaded C# application intended to perform large-scale data processing tasks.
+    // The application utilizes the Task Parallel Library (TPL) for concurrency. However, you've encountered an intermittent issue where the application sometimes hangs indefinitely.
+
+    // The application processes a large set of data items. Each item is processed by a task created using `Task.Factory.StartNew()`.
+    // After processing, results are aggregated. Occasionally, the application does not complete the processing phase, appearing to hang without any exception or error message.
+
+    public class DataProcessor
+    {
+        private List<DataItem> _dataItems;
+        private ConcurrentBag<Result> _results;
+
+        public DataProcessor(List<DataItem> dataItems)
+        {
+            _dataItems = dataItems;
+            _results = new ConcurrentBag<Result>();
+        }
+
+        public void ProcessData()
+        {
+            List<Task> tasks = new List<Task>();
+
+            foreach (var item in _dataItems)
+            {
+                var task = Task.Factory.StartNew(() =>
+                {
+                    var result = ProcessItem(item);
+                    _results.Add(result);
+                });
+                tasks.Add(task);
+            }
+
+            Task.WaitAll(tasks.ToArray());
+            AggregateResults();
+        }
+
+        private Result ProcessItem(DataItem item)
+        {
+            // Processing logic...
+            return null;
+        }
+
+        private void AggregateResults()
+        {
+            // Aggregation logic...
+        }
+    }
+
+    public class DataItem { /* ... */ }
+    public class Result { /* ... */ }
 
     #endregion
 }
